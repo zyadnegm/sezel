@@ -32,11 +32,11 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     _animationController.forward();
 
     // بعد فترة (مثلاً 4 ثوانٍ) الانتقال إلى الشاشة الرئيسية
-    // Timer(const Duration(seconds: 4), () {
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (_) => const WebViewPage()),
-    //   );
-    // });
+    Timer(const Duration(seconds: 4), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const WebViewPage()),
+      );
+    });
   }
 
   @override
@@ -49,7 +49,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0XFFE65B2F),
       body: Center(
         // استخدام FadeTransition لإظهار صورة الـ Splash مع أنيميشن
         child: FadeTransition(

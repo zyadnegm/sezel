@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:sezel/CustomLoading.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -16,15 +17,24 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          progress < 1.0
-              ? LinearProgressIndicator(value: progress)
-              : const SizedBox(),
-          Expanded(
-            child: InAppWebView(
-              initialUrlRequest: URLRequest(url:WebUri(url)),
+    return WillPopScope(
+
+      onWillPop: () async {
+        // التحقق مما إذا كان الـ WebView يمكنه الرجوع
+        if (webViewController != null) {
+          bool canGoBack = await webViewController!.canGoBack();
+          if (canGoBack) {
+            webViewController!.goBack();
+            return false; // منع إغلاق التطبيق
+          }
+        }
+        return true; // إذا لم يكن هناك صفحة سابقة داخل WebView، يسمح بالرجوع (أي الخروج من التطبيق)
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            InAppWebView(
+              initialUrlRequest: URLRequest(url: WebUri(url)),
               onWebViewCreated: (controller) {
                 webViewController = controller;
               },
@@ -37,7 +47,6 @@ class _WebViewPageState extends State<WebViewPage> {
                 var uri = navigationAction.request.url;
                 // منع فتح الروابط الخارجية داخل التطبيق:
                 if (uri != null && !uri.toString().contains("sezelhelp.com")) {
-                  // افتح الرابط في المتصفح الخارجي:
                   if (await canLaunchUrl(uri)) {
                     await launchUrl(uri, mode: LaunchMode.externalApplication);
                     return NavigationActionPolicy.CANCEL;
@@ -47,18 +56,47 @@ class _WebViewPageState extends State<WebViewPage> {
               },
               // دعم عرض صفحة بديلة عند فقدان الاتصال:
               onLoadError: (controller, url, code, message) {
-                controller.loadData(data: """
-                  <html>
-                  <body>
-                    <h1>لا يوجد اتصال بالإنترنت</h1>
-                    <p>يرجى التأكد من اتصالك وإعادة المحاولة.</p>
-                  </body>
-                  </html>
-                """, mimeType: 'text/html', encoding: 'utf-8');
+                controller.loadData(
+                    data: """
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              margin: 0;
+              background-color: #ffffff;
+              font-family: sans-serif;
+            }
+            h1 {
+              font-size: 32px;
+              font-weight: bold;
+              color: #333;
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>No Internet Connection</h1>
+        </body>
+      </html>
+    """,
+                    mimeType: 'text/html',
+                    encoding: 'utf-8'
+                );
               },
             ),
-          ),
-        ],
+            // شاشة التحميل (إذا كنت تستخدمها)
+            if (progress < 1.0)
+              Container(
+                color: Colors.white,
+                child: Customloading(),
+              ),
+          ],
+        ),
       ),
     );
   }

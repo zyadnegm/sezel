@@ -37,6 +37,17 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_inappwebview: ^6.1.5
   url_launcher: ^6.3.1
+  flutter_native_splash: ^2.4.4
+  loading_animation_widget: ^1.3.0
+
+flutter_native_splash:
+    android: true
+    ios: true
+    color: "#FFFFFF"
+
+    android_12:
+      image: images/logoframe.png
+      color: "#FFFFFF"
 
 dev_dependencies:
   flutter_test:
