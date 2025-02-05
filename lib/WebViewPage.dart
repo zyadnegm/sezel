@@ -58,71 +58,73 @@ class _WebViewPageState extends State<WebViewPage> {
         }
         return true;
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            InAppWebView(
-              initialUrlRequest: URLRequest(url: WebUri(url)),
-              onWebViewCreated: (controller) {
-                webViewController = controller;
-              },
-              onProgressChanged: (controller, progressValue) {
-                setState(() {
-                  progress = progressValue / 100;
-                });
-              },
-              shouldOverrideUrlLoading: (controller, navigationAction) async {
-                var uri = navigationAction.request.url;
-                if (uri != null && !uri.toString().contains("sezelhelp.com")) {
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri, mode: LaunchMode.externalApplication);
-                    return NavigationActionPolicy.CANCEL;
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              InAppWebView(
+                initialUrlRequest: URLRequest(url: WebUri(url)),
+                onWebViewCreated: (controller) {
+                  webViewController = controller;
+                },
+                onProgressChanged: (controller, progressValue) {
+                  setState(() {
+                    progress = progressValue / 100;
+                  });
+                },
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  var uri = navigationAction.request.url;
+                  if (uri != null && !uri.toString().contains("sezelhelp.com")) {
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      return NavigationActionPolicy.CANCEL;
+                    }
                   }
-                }
-                return NavigationActionPolicy.ALLOW;
-              },
-              // عرض صفحة بديلة عند فقدان الاتصال
-              onLoadError: (controller, url, code, message) {
-                controller.loadData(
-                  data: """
-                    <html>
-                      <head>
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <style>
-                          body {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100vh;
-                            margin: 0;
-                            background-color: #ffffff;
-                            font-family: sans-serif;
-                          }
-                          h1 {
-                            font-size: 32px;
-                            font-weight: bold;
-                            color: #333;
-                            text-align: center;
-                          }
-                        </style>
-                      </head>
-                      <body>
-                        <h1>No Internet Connection</h1>
-                      </body>
-                    </html>
-                  """,
-                  mimeType: 'text/html',
-                  encoding: 'utf-8',
-                );
-              },
-            ),
-            // شاشة التحميل: تظهر مؤقتًا حتى ينتهي تحميل الموقع
-            if (progress < 1.0)
-              Container(
-                color: Colors.white,
-                child: Customloading(),
-                ),
-          ],
+                  return NavigationActionPolicy.ALLOW;
+                },
+                // عرض صفحة بديلة عند فقدان الاتصال
+                onLoadError: (controller, url, code, message) {
+                  controller.loadData(
+                    data: """
+                      <html>
+                        <head>
+                          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                          <style>
+                            body {
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              height: 100vh;
+                              margin: 0;
+                              background-color: #ffffff;
+                              font-family: sans-serif;
+                            }
+                            h1 {
+                              font-size: 32px;
+                              font-weight: bold;
+                              color: #333;
+                              text-align: center;
+                            }
+                          </style>
+                        </head>
+                        <body>
+                          <h1>No Internet Connection</h1>
+                        </body>
+                      </html>
+                    """,
+                    mimeType: 'text/html',
+                    encoding: 'utf-8',
+                  );
+                },
+              ),
+              // شاشة التحميل: تظهر مؤقتًا حتى ينتهي تحميل الموقع
+              if (progress < 1.0)
+                Container(
+                  color: Colors.white,
+                  child: Customloading(),
+                  ),
+            ],
+          ),
         ),
       ),
     );
