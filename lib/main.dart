@@ -1,9 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sezel/WebViewPage.dart';
 
-import 'animated_splash_screen.dart';
+import 'Notifications/Firebase_Messeging.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Firebase_Messeging().initnotification();
+
   runApp(const MyApp());
 }
 

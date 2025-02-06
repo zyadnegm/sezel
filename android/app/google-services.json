@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358417017610",
+    "project_id": "sezel-c1354",
+    "storage_bucket": "sezel-c1354.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358417017610:android:515f0a36b332cce86be8f3",
+        "android_client_info": {
+          "package_name": "com.sezelhelp.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCtdyccDVR-OvrV8UF_2dahqR39RnGIIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

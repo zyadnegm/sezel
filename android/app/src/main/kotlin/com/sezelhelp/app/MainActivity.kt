@@ -1,4 +1,4 @@
-package com.example.sezel
+package com.sezelhelp.app
 
 import io.flutter.embedding.android.FlutterActivity
 
