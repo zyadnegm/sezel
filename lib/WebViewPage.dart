@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:sezel/CustomLoading.dart';
+import 'package:sezel/homepage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -17,15 +18,17 @@ class _WebViewPageState extends State<WebViewPage> {
   String url = "https://sezelhelp.com/";
   double progress = 0;
 
-  // اشتراك لحالة الاتصال
+  WebUri loginUrl = WebUri("https://sezelhelp.com/?login=true");
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
+
   @override
+
   void initState() {
     super.initState();
 
     // الاشتراك في تغييرات الاتصال
-    late StreamSubscription<ConnectivityResult> connectivitySubscription;
+    // late StreamSubscription<ConnectivityResult> connectivitySubscription;
 
     connectivitySubscription = Connectivity()
         .onConnectivityChanged
@@ -39,11 +42,12 @@ class _WebViewPageState extends State<WebViewPage> {
       }
     });
 
+
   }
 
   @override
   void dispose() {
-    connectivitySubscription.cancel(); // إلغاء الاشتراك عند التخلص من الودجة
+    connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -51,7 +55,6 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // معالجة زر الرجوع، إذا كان بإمكان الـ WebView العودة لصفحة سابقة
         if (webViewController != null && await webViewController!.canGoBack()) {
           webViewController!.goBack();
           return false;
@@ -64,8 +67,37 @@ class _WebViewPageState extends State<WebViewPage> {
             children: [
               InAppWebView(
                 initialUrlRequest: URLRequest(url: WebUri(url)),
+                initialOptions: InAppWebViewGroupOptions(
+                    crossPlatform: InAppWebViewOptions(
+                      useShouldOverrideUrlLoading: true,
+                    )
+                ),
                 onWebViewCreated: (controller) {
                   webViewController = controller;
+
+                  webViewController?.addJavaScriptHandler(
+                    handlerName: 'getEmailValue',
+                    callback: (args) {
+                      if (args.isNotEmpty) {
+                        String emailValue = args[0];
+                        print("Email entered by user: $emailValue");
+                      } else {
+                        print("No email value received.");
+                      }
+                    },
+                  );
+
+                  webViewController?.addJavaScriptHandler(
+                    handlerName: 'getPasswordValue',
+                    callback: (args) {
+                      if (args.isNotEmpty) {
+                        String passwordValue = args[0];
+                        print("Password entered by user: $passwordValue");
+                      } else {
+                        print("No password value received.");
+                      }
+                    },
+                  );
                 },
                 onProgressChanged: (controller, progressValue) {
                   setState(() {
@@ -82,7 +114,39 @@ class _WebViewPageState extends State<WebViewPage> {
                   }
                   return NavigationActionPolicy.ALLOW;
                 },
-                // عرض صفحة بديلة عند فقدان الاتصال
+                onLoadStop: (controller, url) async {
+                  if (url.toString().contains("register")) {
+                    // Separate JavaScript code for email
+                    await webViewController?.evaluateJavascript(source: """
+                      (function() {
+                        let emailInput = document.querySelector('input[name="digits_reg_name"]');
+                        if (emailInput) {
+                          emailInput.addEventListener('input', function() {
+                            window.flutter_inappwebview.callHandler('getEmailValue', this.value);
+                          });
+                          window.flutter_inappwebview.callHandler('getEmailValue', emailInput.value); // Initial value
+                        } else {
+                          console.error('Email input field not found!');
+                        }
+                      })();
+                    """);
+
+                    // Separate JavaScript code for password
+                    await webViewController?.evaluateJavascript(source: """
+                      (function() {
+                        let passwordInput = document.querySelector('input[name="digits_reg_password"]');
+                        if (passwordInput) {
+                          passwordInput.addEventListener('input', function() {
+                            window.flutter_inappwebview.callHandler('getPasswordValue', this.value);
+                          });
+                          window.flutter_inappwebview.callHandler('getPasswordValue', passwordInput.value); // Initial value
+                        } else {
+                          console.error('Password input field not found!');
+                        }
+                      })();
+                    """);
+                  }
+                },
                 onLoadError: (controller, url, code, message) {
                   controller.loadData(
                     data: """
@@ -117,12 +181,11 @@ class _WebViewPageState extends State<WebViewPage> {
                   );
                 },
               ),
-              // شاشة التحميل: تظهر مؤقتًا حتى ينتهي تحميل الموقع
               if (progress < 1.0)
                 Container(
                   color: Colors.white,
                   child: Customloading(),
-                  ),
+                ),
             ],
           ),
         ),
