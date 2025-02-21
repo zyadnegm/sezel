@@ -10,7 +10,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'CustomLoading.dart';
 
 class Homepage extends StatefulWidget {
-   Homepage({super.key,});
+   Homepage({super.key, this.fcmtoken,});
+   final String? fcmtoken;
   @override
   State<Homepage> createState() => _HomepageState();
 }
@@ -121,9 +122,24 @@ class _HomepageState extends State<Homepage> {
                       apiService.setCookies(cookieHeader);
 
                       // استدعاء login()
-                       String? token = await apiService.login();
+                       String? jwttoken = await apiService.login();
 
-                      print("🔑 Token: $token");
+    if (jwttoken == null) {
+    Future.microtask(() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("برجاء تسجيل الدخول "),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    });
+  }
+    else{
+      apiService.sendNotification(jwttoken, widget.fcmtoken!);
+      // await ApiService().getNotifications(jwttoken);
+    }
+
+                      print("🔑 Token: $jwttoken");
                     } else {
                       print("🚨 لا توجد كوكيز متاحة!");
                     }
@@ -176,3 +192,27 @@ class _HomepageState extends State<Homepage> {
     );
   }
 }
+
+
+// void _initializeData() async {
+//   String? fcmtoken = await Firebase_Messeging().gettoken();
+//   var jwttoken = await ApiService().login();
+//   print("=====================Token=$jwttoken");
+//
+//   if (jwttoken == null) {
+//     Future.microtask(() {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text("برجاء تسجيل الدخول "),
+//           duration: Duration(seconds: 3),
+//         ),
+//       );
+//     });
+//   }
+//   else {
+//     print("+++++++++++++++++Token=$jwttoken");
+//     await ApiService().getNotifications(jwttoken);
+//     await ApiService().sendNotification(jwttoken, fcmtoken!);
+//
+//   }
+// }

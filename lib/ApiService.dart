@@ -52,7 +52,7 @@ class ApiService {
   Future<List<dynamic>?> getNotifications(String token) async {
     try {
       final response = await dio.get(
-        "https://sezelhelp.com/api/v1/notification",
+        "https://sezelhelp.com/wp-json/api/v1/notification",
         options: Options(
           headers: {
             "Authorization": "Bearer $token", // 🔹 تضمين التوكن
@@ -75,7 +75,7 @@ class ApiService {
   Future<bool> sendNotification(String token, String fcmToken) async {
     try {
       final response = await dio.post(
-        "https://sezelhelp.com/api/v1/send-notification",
+        "https://sezelhelp.com/wp-json/api/v1/send-notification",
         options: Options(
           headers: {
             "Authorization": "Bearer $token", // 🔹 تضمين التوكن

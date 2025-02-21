@@ -1,33 +1,28 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:sezel/ApiService.dart';
 import 'package:sezel/WebViewPage.dart';
 import 'Notifications/Firebase_Messeging.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // ✅ جلب التوكن قبل تشغيل التطبيق
+  String? token = await Firebase_Messeging().gettoken();
 
-  Firebase_Messeging().initnotification();
-
-
-  runApp(const MyApp());
+  runApp(MyApp(token: token));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? token;
+  const MyApp({Key? key, this.token}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:  WebViewPage(),
+      home: WebViewPage(fcmtoken: token,), // ✅ تمرير التوكن إلى الصفحة
     );
   }
 }
-
