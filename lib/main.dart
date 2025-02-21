@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sezel/ApiService.dart';
 import 'package:sezel/WebViewPage.dart';
-
 import 'Notifications/Firebase_Messeging.dart';
 import 'firebase_options.dart';
 
@@ -11,7 +11,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   Firebase_Messeging().initnotification();
+
 
   runApp(const MyApp());
 }
@@ -23,12 +25,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: const WebViewPage(),
+      home:  WebViewPage(),
     );
   }
 }
 
-//
