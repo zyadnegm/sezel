@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:sezel/ApiService.dart';
+import 'package:sezel/Firebase_Database.dart';
+import 'package:sezel/UserInfo_Model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -122,24 +124,17 @@ class _HomepageState extends State<Homepage> {
                       apiService.setCookies(cookieHeader);
 
                       // استدعاء login()
-                       String? jwttoken = await apiService.login();
+                       List<dynamic>? tokens = await apiService.login();
 
-    if (jwttoken == null) {
-    Future.microtask(() {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("برجاء تسجيل الدخول "),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    });
-  }
-    else{
-      apiService.sendNotification(jwttoken, widget.fcmtoken!);
-      // await ApiService().getNotifications(jwttoken);
-    }
+    if (tokens != null) {
+      User_Model user=User_Model(widget.fcmtoken!,tokens[0], tokens[1]);
+      Firebase_Function.add_user(user);  }
 
-                      print("🔑 Token: $jwttoken");
+                      print("🔑 Token: ${tokens![0]}");
+                      print("🔑 user_id: ${tokens![1]}");
+
+
+
                     } else {
                       print("🚨 لا توجد كوكيز متاحة!");
                     }

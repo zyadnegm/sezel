@@ -25,7 +25,7 @@ class ApiService {
     print("✅ الكوكيز تم إضافتها إلى Dio: $cookies");
   }
 
-  Future<String?> login() async {
+  Future<List<dynamic>?> login() async {
     try {
       final response = await dio.get(
         "https://sezelhelp.com/wp-json/auth/v1/login",
@@ -37,9 +37,15 @@ class ApiService {
       );
 
       if (response.statusCode! >= 200 && response.data["success"] == true) {
-        String token = response.data["token"];
-        print("✅ تسجيل الدخول ناجح! Token: $token");
-        return token;
+        // String token = response.data["token"];
+        List<dynamic>tokens=[
+          response.data["token"],
+          response.data["user_id"],
+        ];
+        print("✅ تسجيل الدخول ناجح! jwttoken: ${tokens[0]} ");
+        print("✅ تسجيل الدخول ناجح! user_id: ${tokens[1]} ");
+
+        return tokens;
       } else {
         print("❌ فشل تسجيل الدخول: ${response.data["error"]}");
         return null;
