@@ -17,6 +17,4 @@ class Firebase_Function {
     var document = User_Collection().doc(user.user_id.toString());
     return document.set(user);
   }
-
-
 }

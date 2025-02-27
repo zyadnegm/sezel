@@ -1,33 +1,25 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sezel/ApiService.dart';
 
-class Firebase_Messeging{
-  ApiService apiService=ApiService();
+class Firebase_Messeging {
+  ApiService apiService = ApiService();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  Future<void>initnotification()async {
+  Future<void> initnotification() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
-  Future<String?>gettoken()async{
 
+  Future<String?> gettoken() async {
     await messaging.requestPermission();
-    String? fcmtoken=await messaging.getToken();
+    String? fcmtoken = await messaging.getToken();
     print("+++++++++fcm : $fcmtoken");
     return fcmtoken;
   }
 
-
-
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
     await Firebase.initializeApp();
-
-    // message.notification?.android?.sound="";
     print("+++++++++++${message.data}====================");
-
   }
-
-
-
 }

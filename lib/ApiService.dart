@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class ApiService {
   late Dio dio;
   late CookieJar cookieJar;
@@ -38,7 +37,7 @@ class ApiService {
 
       if (response.statusCode! >= 200 && response.data["success"] == true) {
         // String token = response.data["token"];
-        List<dynamic>tokens=[
+        List<dynamic> tokens = [
           response.data["token"],
           response.data["user_id"],
         ];
@@ -55,58 +54,4 @@ class ApiService {
       return null;
     }
   }
-  Future<List<dynamic>?> getNotifications(String token) async {
-    try {
-      final response = await dio.get(
-        "https://sezelhelp.com/wp-json/api/v1/notification",
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token", // 🔹 تضمين التوكن
-          },
-        ),
-      );
-
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        if (response.data["success"] == true) {
-          return response.data["notifications"]; // ✅ إرجاع قائمة الإشعارات
-        }
-      }
-    } catch (e) {
-      print("❌ خطأ في جلب الإشعارات: $e");
-    }
-    return null;
-  }
-
-
-  Future<bool> sendNotification(String token, String fcmToken) async {
-    try {
-      final response = await dio.post(
-        "https://sezelhelp.com/wp-json/api/v1/send-notification",
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token", // 🔹 تضمين التوكن
-            // "Content-Type": "application/json",
-          },
-        ),
-        data: {
-          "fcm_token": fcmToken, // 🔹 إرسال FCM Token للجهاز المستهدف
-        },
-      );
-
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        if (response.data["success"] == true) {
-          print("✅ تم إرسال الإشعار بنجاح!");
-          return true;
-        } else {
-          print("❌ فشل إرسال الإشعار: ${response.data["error"]}");
-        }
-      }
-    } catch (e) {
-      print("🚨 خطأ أثناء إرسال الإشعار: $e");
-    }
-    return false;
-  }
-
 }
-
-

@@ -8,7 +8,7 @@ class User_Model {
   // تحويل كائن JSON إلى كائن User_Model
   factory User_Model.fromJson(Map<String, dynamic> json) {
     return User_Model(
-      json['fcm_token'] ?? '',  // تجنب القيم الفارغة
+      json['fcm_token'] ?? '', // تجنب القيم الفارغة
       json['jwt_token'] ?? '',
       json['user_id'] ?? 0,
     );

@@ -6,11 +6,9 @@ class Customloading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return Center(
       child: LoadingAnimationWidget.staggeredDotsWave(
-          color: Color(0XFFE65B2F),
-          size: 200
-      ),
+          color: const Color(0XFFE65B2F), size: 200),
     );
   }
 }
