@@ -3,31 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:sezel/WebViewPage.dart';
 import 'Notifications/Firebase_Messeging.dart';
+import 'animated_splash_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // ✅ جلب التوكن قبل تشغيل التطبيق
-  String? token = await Firebase_Messeging().gettoken();
-  InAppWebViewPlatform.instance = InAppWebViewPlatform.instance;
 
 
-  runApp(MyApp(token: token));
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final String? token;
-  const MyApp({super.key, this.token});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WebViewPage(
-        fcmtoken: token,
-      ), // ✅ تمرير التوكن إلى الصفحة
+      home: AnimatedSplashScreen(), // ✅ تمرير التوكن إلى الصفحة
     );
   }
 }
