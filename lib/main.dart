@@ -1,20 +1,23 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:sezel/WebViewPage.dart';
-import 'Notifications/Firebase_Messeging.dart';
+import 'package:sezel/Notifications/Firebase_Messeging.dart';
 import 'animated_splash_screen.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Firebase_Messeging().initnotification();
 
 
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? token;
+  const MyApp({super.key, this.token});
 
   @override
   Widget build(BuildContext context) {
