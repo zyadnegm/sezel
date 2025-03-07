@@ -11,7 +11,10 @@ class Firebase_Messeging {
   }
 
   Future<String?> gettoken() async {
-    await messaging.requestPermission();
+    await messaging.requestPermission(
+        sound: true,
+
+    );
     String? fcmtoken = await messaging.getToken();
     print("+++++++++fcm : $fcmtoken");
     return fcmtoken;
