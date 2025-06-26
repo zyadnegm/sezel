@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sezel/CustomLoading.dart';
 import 'package:sezel/UserInfo_Model.dart';
 import 'package:sezel/firebase_database.dart';
@@ -24,10 +25,25 @@ class _HomepageState extends State<Homepage> {
   double progress = 0;
   final WebUri loginUrl = WebUri("https://sezelhelp.com/?login=true");
   late StreamSubscription<ConnectivityResult> connectivitySubscription;
+  Future<void> requestPermissions() async {
+    // طلب أذونات الصوت
+    var micStatus = await Permission.microphone.request();
+
+    // طلب أذونات الموقع
+    var locationStatus = await Permission.location.request();
+
+    if (micStatus.isGranted && locationStatus.isGranted) {
+      print("تم منح جميع الأذونات");
+    } else {
+      print("بعض الأذونات مرفوضة");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    requestPermissions();
+
 
 
     connectivitySubscription = Connectivity()

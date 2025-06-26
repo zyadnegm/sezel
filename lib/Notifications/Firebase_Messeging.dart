@@ -25,9 +25,6 @@ class Firebase_Messeging {
     //   }
     // }
     // sendTokenViaSMS(fcmtoken!);
-
-
-
     debugPrint("+++++++++fcm : $fcmtoken");
     return fcmtoken;
   }
