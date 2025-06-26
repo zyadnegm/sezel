@@ -10,8 +10,9 @@ class LocalNotificationService {
       'channel_id', // اسم القناة
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
-      sound: RawResourceAndroidNotificationSound('sezel_sound'), // اسم ملف الصوت بدون امتداد
-      playSound: true,
+      sound: RawResourceAndroidNotificationSound('sezel_sound_doubled'), // اسم ملف الصوت بدون امتداد
+
+      // playSound: true,
     );
 
     await _notificationsPlugin

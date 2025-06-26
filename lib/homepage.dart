@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sezel/CustomLoading.dart';
 import 'package:sezel/UserInfo_Model.dart';
 import 'package:sezel/firebase_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'ApiService.dart';
+import 'Notifications/local_notification.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key, this.fcmtoken});
@@ -26,6 +28,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+
 
     connectivitySubscription = Connectivity()
         .onConnectivityChanged
@@ -65,8 +68,20 @@ class _HomepageState extends State<Homepage> {
                   crossPlatform: InAppWebViewOptions(
                     useShouldOverrideUrlLoading: true,
                     useOnLoadResource: true,
+                    javaScriptEnabled: true,
+                    useOnDownloadStart: true,
+
                   ),
                 ),
+                androidOnPermissionRequest: (controller, origin, resources) async {
+                  return PermissionRequestResponse(
+                    resources: resources,
+                    action: PermissionRequestResponseAction.GRANT,
+                  );
+                },
+
+
+
                 onWebViewCreated: (controller) {
                   webViewController = controller;
                 },
@@ -93,7 +108,7 @@ class _HomepageState extends State<Homepage> {
                     final cookies = await cookieManager.getCookies(
                         url: WebUri("https://sezelhelp.com"));
                     final cookieHeader =
-                        cookies.map((e) => "${e.name}=${e.value}").join("; ");
+                    cookies.map((e) => "${e.name}=${e.value}").join("; ");
 
                     if (cookies.isNotEmpty) {
                       debugPrint("🍪 ✅ تم جلب الكوكيز: $cookieHeader");
@@ -103,7 +118,7 @@ class _HomepageState extends State<Homepage> {
 
                       if (tokens != null) {
                         final user =
-                            User_Model(widget.fcmtoken!, tokens[0], tokens[1]);
+                        User_Model(widget.fcmtoken!, tokens[0], tokens[1]);
                         Firebase_Function.add_user(user);
                         debugPrint("🔑 Token: ${tokens[0]}");
                         debugPrint("🔑 user_id: ${tokens[1]}");

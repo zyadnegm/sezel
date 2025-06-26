@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sezel/Notifications/Firebase_Messeging.dart';
 import 'Notifications/local_notification.dart';
 import 'animated_splash_screen.dart';

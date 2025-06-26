@@ -3,6 +3,7 @@ class User_Model {
   String jwt_token;
   int user_id;
 
+
   User_Model(this.fcm_token, this.jwt_token, this.user_id);
 
   // تحويل كائن JSON إلى كائن User_Model
