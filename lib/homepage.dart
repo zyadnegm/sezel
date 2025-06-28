@@ -79,6 +79,14 @@ class _HomepageState extends State<Homepage> {
           body: Stack(
             children: [
               InAppWebView(
+                androidOnGeolocationPermissionsShowPrompt: (controller, origin) async {
+                  return GeolocationPermissionShowPromptResponse(
+                    origin: origin,
+                    allow: true,
+                    retain: true,
+                  );
+                },
+
                 initialUrlRequest: URLRequest(url: WebUri(url)),
                 initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
