@@ -23,7 +23,7 @@ class LocalNotificationService {
 
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
-ه      iOS: iosSettings,
+      iOS: iosSettings,
     );
 
     await _notificationsPlugin.initialize(initSettings);
