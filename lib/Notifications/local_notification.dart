@@ -5,18 +5,32 @@ class LocalNotificationService {
   FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'channel_id', // معرف القناة
-      'channel_id', // اسم القناة
+    const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
+      'channel_id',
+      'channel_id',
       description: 'This channel is used for important notifications.',
       importance: Importance.high,
-      sound: RawResourceAndroidNotificationSound('sezel_sound_doubled'), // اسم ملف الصوت بدون امتداد
-
-      // playSound: true,
+      sound: RawResourceAndroidNotificationSound('sezel_sound_doubled'), // Android only
     );
+
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+    );
+
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initSettings = InitializationSettings(
+      android: androidSettings,
+ه      iOS: iosSettings,
+    );
+
+    await _notificationsPlugin.initialize(initSettings);
 
     await _notificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+        ?.createNotificationChannel(androidChannel);
   }
+
 }
