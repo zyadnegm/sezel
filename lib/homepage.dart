@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sezel/CustomLoading.dart';
 import 'package:sezel/UserInfo_Model.dart';
@@ -9,7 +8,6 @@ import 'package:sezel/firebase_database.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'ApiService.dart';
-import 'Notifications/local_notification.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key, this.fcmtoken});
